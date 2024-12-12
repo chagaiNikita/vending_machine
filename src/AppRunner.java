@@ -43,25 +43,30 @@ public class AppRunner {
     private static void checkCard() {
         Scanner sc = new Scanner(System.in);
         if (paymentMethod instanceof BankCard) {
-            try {
-                System.out.print("Введите номер карты: ");
-                String cardNum = sc.nextLine();
-                if (cardNum.isBlank()) {
-                    throw new InvalidCardAccessException("Строка не может быть пустой");
+            while (true) {
+                try {
+                    System.out.print("Введите номер карты: ");
+                    String cardNum = sc.nextLine();
+                    if (cardNum.isBlank()) {
+                        throw new InvalidCardAccessException("Строка не может быть пустой");
+                    }
+                    if (!cardNum.strip().equals(((BankCard) paymentMethod).getCardNumber())) {
+                        throw new InvalidCardAccessException("Неверный номер карты");
+                    }
+                    System.out.print("Введите код: ");
+                    int cardPin = sc.nextInt();
+                    if (cardPin != ((BankCard) paymentMethod).getCardPassword()) {
+                        throw new InvalidCardAccessException("Неверный пинкод");
+                    }
+                    break;
+                } catch (InvalidCardAccessException e) {
+                    System.out.println(e.getMessage());
+                } catch (InputMismatchException e) {
+                    System.out.println("Пинкод не может содержать символов или букв");
                 }
-                if (!cardNum.strip().equals(((BankCard) paymentMethod).getCardNumber())) {
-                    throw new InvalidCardAccessException("Неверный номер карты");
-                }
-                System.out.print("Введите код: ");
-                int cardPin = sc.nextInt();
-                if (cardPin != ((BankCard) paymentMethod).getCardPassword()) {
-                    throw new InvalidCardAccessException("Неверный пинкод");
-                }
-            } catch (InvalidCardAccessException e) {
-                System.out.println(e.getMessage());
-            } catch (InputMismatchException e) {
-                System.out.println("Пинкод не может содержать символов или букв");
+                sc.nextLine();
             }
+
 
 
         }
