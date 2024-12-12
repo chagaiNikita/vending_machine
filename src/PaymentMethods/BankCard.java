@@ -9,4 +9,12 @@ public class BankCard extends PaymentMethods {
         this.cardNumber = cardNumber;
         this.cardPassword = cardPassword;
     }
+
+    public String getCardNumber() {
+        return cardNumber;
+    }
+
+    public int getCardPassword() {
+        return cardPassword;
+    }
 }
