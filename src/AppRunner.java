@@ -1,17 +1,20 @@
 import PaymentMethods.CoinAcceptor;
+import PaymentMethods.BankCard;
 import PaymentMethods.PaymentMethods;
 import enums.ActionLetter;
+import exceptions.InvalidCardAccessException;
 import model.*;
 import util.UniversalArray;
 import util.UniversalArrayImpl;
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class AppRunner {
 
     private final UniversalArray<Product> products = new UniversalArrayImpl<>();
 
-    private PaymentMethods paymentMethod;
+    private static PaymentMethods paymentMethod;
 
     private static boolean isExit = false;
 
@@ -24,14 +27,43 @@ public class AppRunner {
                 new Mars(ActionLetter.F, 80),
                 new Pistachios(ActionLetter.G, 130)
         });
-//        paymentMethod = new CoinAcceptor(100);
-
+//        paymentMethod = new CoinAcceptor(120);
+        paymentMethod = new BankCard(100, "4449 0799 0087 4517", 1234);
     }
 
     public static void run() {
         AppRunner app = new AppRunner();
+        checkCard();
         while (!isExit) {
             app.startSimulation();
+        }
+    }
+
+
+    private static void checkCard() {
+        Scanner sc = new Scanner(System.in);
+        if (paymentMethod instanceof BankCard) {
+            try {
+                System.out.print("Введите номер карты: ");
+                String cardNum = sc.nextLine();
+                if (cardNum.isBlank()) {
+                    throw new InvalidCardAccessException("Строка не может быть пустой");
+                }
+                if (!cardNum.strip().equals(((BankCard) paymentMethod).getCardNumber())) {
+                    throw new InvalidCardAccessException("Неверный номер карты");
+                }
+                System.out.print("Введите код: ");
+                int cardPin = sc.nextInt();
+                if (cardPin != ((BankCard) paymentMethod).getCardPassword()) {
+                    throw new InvalidCardAccessException("Неверный пинкод");
+                }
+            } catch (InvalidCardAccessException e) {
+                System.out.println(e.getMessage());
+            } catch (InputMismatchException e) {
+                System.out.println("Пинкод не может содержать символов или букв");
+            }
+
+
         }
     }
 
