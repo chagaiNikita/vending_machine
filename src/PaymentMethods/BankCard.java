@@ -1,4 +1,12 @@
 package PaymentMethods;
 
-public class BankCard {
+public class BankCard extends PaymentMethods {
+    private String cardNumber;
+    private int cardPassword;
+
+    public BankCard(int amount, String cardNumber, int cardPassword) {
+        super(amount);
+        this.cardNumber = cardNumber;
+        this.cardPassword = cardPassword;
+    }
 }

@@ -1,1 +1,3 @@
 git branch home_work_25
+git commit -m "separated payment methods, added the BankCard class for a bank card"
+git push -u origin --all
